@@ -3,7 +3,10 @@ require('dotenv').config();
 
 // Imposta il token del tuo bot
 const token = process.env.TELEGRAM_TOKEN;
-let serverPort = process.env.SERVER_PORT;
+const serverPort = process.env.SERVER_PORT;
+const env = process.env.ENV;
+const webhookUrl = process.env.WEBHOOK_URL 
+
 const stickers = {
 	SOLO_TALENTO : "CAACAgQAAxkBAAMyZJRrtAABkTORkSDPllL5OoTXAAGNgAAClwsAAqQvKFCUOrxyEMuLYC8E",
 	MERCATO_FERMENTO : "CAACAgQAAxkBAAIBGWSVV9OflgnWUqCWCiG-TRLFCoy0AAK6CgACmovJUgJJzTmYcuKvLwQ",
@@ -92,3 +95,7 @@ bot.on('sticker', (msg) => {
 bot.on('polling_error', (error) => {
   console.log(error);
 });
+
+if(env.toLowerCase() === 'prod'){
+	bot.setWebHook(webhookUrl);
+}
