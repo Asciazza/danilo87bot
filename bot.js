@@ -33,7 +33,13 @@ http.createServer((request, response) => {
     response.statusCode = 200;
     response.write("pong");
     response.end();
-  } else {
+  } else if (request.method === 'POST') {
+	console.log("received post ", request);
+    response.statusCode = 200;
+    response.write("ok");
+    response.end();
+  }
+  else {
     response.statusCode = 404;
     response.end();
   }
