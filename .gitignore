@@ -1,3 +1,5 @@
 /.env
 /.project
 node_modules
+
+.vercel
