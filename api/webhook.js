@@ -17,44 +17,12 @@ const stickers = {
 }
 
 // Crea una nuova istanza del bot
-const bot = new TelegramBot(token, { polling: true });
-const http = require('http'); 
-
-http.createServer((request, response) => {
-  request.on('error', (err) => {
-    console.error(err);
-    response.statusCode = 400;
-    response.end(); 
-  });
-  response.on('error', (err) => {
-    console.error(err);
-  });
-  if (request.method === 'GET' && request.url === '/ping') {
-    response.statusCode = 200;
-    response.write("pong");
-    response.end();
-  } else if (request.method === 'POST') {
-	console.log("received post ", request);
-    response.statusCode = 200;
-    response.write("ok");
-    response.end();
-  }
-  else {
-    response.statusCode = 404;
-    response.end();
-  }
-}).listen(serverPort);
-
-console.log("server started on port "+serverPort);
+const bot = new TelegramBot(token);
 
 let counter = {};
 
-bot.onText(/(.+)/, (msg, match) => {
-	console.log("ontext", msg);
-  const chatId = msg.chat.id;
-  const message = match[1];
-  const messageLower = message.toLowerCase();
-  if(messageLower.indexOf("culo")!==-1){
+let interact = function(messageLower, chatId){
+	if(messageLower.indexOf("culo")!==-1){
 	  bot.sendSticker(chatId, stickers.SOLO_TALENTO);
 	  return;
   }
@@ -89,19 +57,32 @@ bot.onText(/(.+)/, (msg, match) => {
 	  counter[chatId] = 0;
 	  return;
   }
-  
-  
-});
-
-bot.on('sticker', (msg) => {
-  console.log(msg.sticker.file_id);
-});
-
-// Avvia il bot
-bot.on('polling_error', (error) => {
-  console.log(error);
-});
-
-if(env.toLowerCase() === 'prod'){
-	bot.setWebHook(webhookUrl);
 }
+
+module.exports = async (request, response) => {
+    try {
+        // Retrieve the POST request body that gets sent from Telegram
+        const { body } = request;
+
+        // Ensure that this is a message being sent
+        if (body.message) {
+            // Retrieve the ID for this chat
+            // and the text that the user sent
+            const { chat: { id }, text } = body.message;
+
+			interact(text.toLowerCase(), id);
+            
+        }
+    }
+    catch(error) {
+        // If there was an error sending our message then we 
+        // can log it into the Vercel console
+        console.error('Error sending message');
+        console.log(error.toString());
+    }
+    
+    // Acknowledge the message with Telegram
+    // by sending a 200 HTTP status code
+    // The message here doesn't matter.
+    response.send('OK');
+};
