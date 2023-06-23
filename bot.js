@@ -37,6 +37,8 @@ http.createServer((request, response) => {
   }
 }).listen(serverPort);
 
+console.log("server started on port "+serverPort);
+
 let counter = {};
 
 bot.onText(/(.+)/, (msg, match) => {
