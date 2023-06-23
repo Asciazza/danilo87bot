@@ -15,7 +15,7 @@ const stickers = {
 
 // Crea una nuova istanza del bot
 const bot = new TelegramBot(token, { polling: true });
-
+ 
 const http = require('http'); 
 
 http.createServer((request, response) => {
