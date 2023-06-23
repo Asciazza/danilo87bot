@@ -35,8 +35,11 @@ module.exports = async (request, response) => {
 			const messageLower = text.toLowerCase();
 			const chatId = id;
 			
+			bot.sendMessage(chatId, "hai mandato "+messageLower);
+			
 			if(messageLower.indexOf("culo")!==-1){
 			  bot.sendSticker(chatId, stickers.SOLO_TALENTO);
+			  
 			  return;
 		  }
 		  if(messageLower.indexOf("confermi?")!==-1){
