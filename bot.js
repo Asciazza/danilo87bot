@@ -22,7 +22,7 @@ http.createServer((request, response) => {
   request.on('error', (err) => {
     console.error(err);
     response.statusCode = 400;
-    response.end();
+    response.end(); 
   });
   response.on('error', (err) => {
     console.error(err);
