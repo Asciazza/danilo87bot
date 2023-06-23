@@ -16,53 +16,15 @@ const stickers = {
 	SUCCEDERE : "CAACAgQAAxkBAAIBI2SVWaVq4viyQvRi6SGZKozJ5ihRAALeCwACl8soULYedKJwDc9wLwQ"
 }
 
-// Crea una nuova istanza del bot
-const bot = new TelegramBot(token);
-
 let counter = {};
-
-let interact = function(messageLower, chatId){
-	if(messageLower.indexOf("culo")!==-1){
-	  bot.sendSticker(chatId, stickers.SOLO_TALENTO);
-	  return;
-  }
-  if(messageLower.indexOf("confermi?")!==-1){
-	  bot.sendMessage(chatId, 'confermo!');
-	  return;  
-  }
-  if(messageLower.indexOf("apply")!==-1){
-	  bot.sendSticker(chatId, stickers.MERCATO_FERMENTO);
-	  return;  
-  }
-  if(messageLower.indexOf("colloqui")!==-1){
-	  bot.sendSticker(chatId, stickers.MOLTO_ATTIVI);
-	  return;  
-  }
-  if(messageLower.indexOf("piacerebbe")!==-1){
-	  bot.sendSticker(chatId, stickers.MAGARI);
-	  return;  
-  }
-  if(messageLower.indexOf("speriamo")!==-1){
-	  bot.sendSticker(chatId, stickers.SUCCEDERE);
-	  return;  
-  }
-  
-  // ogni tot
-  if(!chatId in counter){
-	  counter[chatId] = 0;
-  }
-  counter[chatId]++;
-  if(counter[chatId] >= 30){
-	  bot.sendSticker(chatId, stickers.SBO);
-	  counter[chatId] = 0;
-	  return;
-  }
-}
 
 module.exports = async (request, response) => {
     try {
         // Retrieve the POST request body that gets sent from Telegram
         const { body } = request;
+		
+		// Crea una nuova istanza del bot
+		const bot = new TelegramBot(token);
 
         // Ensure that this is a message being sent
         if (body.message) {
@@ -70,7 +32,44 @@ module.exports = async (request, response) => {
             // and the text that the user sent
             const { chat: { id }, text } = body.message;
 
-			interact(text.toLowerCase(), id);
+			const messageLower = text.toLowerCase();
+			const chatId = id;
+			
+			if(messageLower.indexOf("culo")!==-1){
+			  bot.sendSticker(chatId, stickers.SOLO_TALENTO);
+			  return;
+		  }
+		  if(messageLower.indexOf("confermi?")!==-1){
+			  bot.sendMessage(chatId, 'confermo!');
+			  return;  
+		  }
+		  if(messageLower.indexOf("apply")!==-1){
+			  bot.sendSticker(chatId, stickers.MERCATO_FERMENTO);
+			  return;  
+		  }
+		  if(messageLower.indexOf("colloqui")!==-1){
+			  bot.sendSticker(chatId, stickers.MOLTO_ATTIVI);
+			  return;  
+		  }
+		  if(messageLower.indexOf("piacerebbe")!==-1){
+			  bot.sendSticker(chatId, stickers.MAGARI);
+			  return;  
+		  }
+		  if(messageLower.indexOf("speriamo")!==-1){
+			  bot.sendSticker(chatId, stickers.SUCCEDERE);
+			  return;  
+		  }
+		  
+		  // ogni tot
+		  if(!chatId in counter){
+			  counter[chatId] = 0;
+		  }
+		  counter[chatId]++;
+		  if(counter[chatId] >= 30){
+			  bot.sendSticker(chatId, stickers.SBO);
+			  counter[chatId] = 0;
+			  return;
+		  }
             
         }
     }
